@@ -8,16 +8,16 @@
 #define HOST_ADDR "127.0.0.1"
 #define PORT "8000"
 
-struct sockaddr_in get_server(void)
+struct sockaddr_in get_serveraddr(void)
 {
-  struct sockaddr_in server;
-  bzero(&server, sizeof(server));
+  struct sockaddr_in serveraddr;
+  bzero(&serveraddr, sizeof(serveraddr));
 
-  server.sin_family = AF_INET;
-  server.sin_addr.s_addr = inet_addr(HOST_ADDR);
-  server.sin_port = htons(atoi(PORT));
+  serveraddr.sin_family = AF_INET;
+  serveraddr.sin_addr.s_addr = inet_addr(HOST_ADDR);
+  serveraddr.sin_port = htons(atoi(PORT));
 
-  return server;
+  return serveraddr;
 }
 
 int create_connection()
@@ -30,9 +30,9 @@ int create_connection()
     exit(1);
   }
 
-  const struct sockaddr_in server = get_server();
+  const struct sockaddr_in serveraddr = get_serveraddr();
 
-  if (connect(sockfd, (const struct sockaddr *)&server, sizeof(server)) < 0)
+  if (connect(sockfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr)) < 0)
   {
     perror("Could not connect to Server at " HOST_ADDR ":" PORT);
     return -1;
