@@ -20,7 +20,7 @@ struct sockaddr_in get_serveraddr(void)
   return serveraddr;
 }
 
-int create_connection()
+int create_connection(const struct sockaddr_in serveraddr)
 {
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -29,8 +29,6 @@ int create_connection()
     perror("ERROR opening socket");
     exit(1);
   }
-
-  const struct sockaddr_in serveraddr = get_serveraddr();
 
   if (connect(sockfd, (const struct sockaddr *)&serveraddr, sizeof(serveraddr)) < 0)
   {
@@ -43,7 +41,7 @@ int create_connection()
 
 int main(void)
 {
-  int sockfd = create_connection();
+  int sockfd = create_connection(get_serveraddr());
 
   while (1)
   {

@@ -5,14 +5,22 @@
 #include <unistd.h>
 #include <netdb.h>
 
-int main(void)
-{
-  struct sockaddr_in server_addr;
-  bzero(&server_addr, sizeof(server_addr));
-  server_addr.sin_family = AF_INET;
-  server_addr.sin_addr.s_addr = INADDR_ANY;
-  server_addr.sin_port = htons(8000);
+#define PORT "8000"
 
+struct sockaddr_in get_serveraddr(void)
+{
+  struct sockaddr_in serveraddr;
+  bzero(&serveraddr, sizeof(serveraddr));
+
+  serveraddr.sin_family = AF_INET;
+  serveraddr.sin_addr.s_addr = INADDR_ANY;
+  serveraddr.sin_port = htons(atoi(PORT));
+
+  return serveraddr;
+}
+
+int start_listening(const struct sockaddr_in serveraddr, int no_of_connections)
+{
   int sockfd = socket(AF_INET, SOCK_STREAM, 0);
   if (sockfd < 0)
   {
@@ -20,13 +28,19 @@ int main(void)
     exit(1);
   }
 
-  if (bind(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)
+  if (bind(sockfd, (struct sockaddr *)&serveraddr, sizeof(serveraddr)) < 0)
   {
     perror("ERROR on binding");
     exit(1);
   }
 
-  listen(sockfd, 5);
+  listen(sockfd, no_of_connections);
+  return sockfd;
+}
+
+int main(void)
+{
+  int sockfd = start_listening(get_serveraddr(), 2);
 
   struct sockaddr_in client_addr;
   socklen_t client_addr_size = sizeof(client_addr);
