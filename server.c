@@ -51,15 +51,15 @@ void handle_request(int sockfd, const struct sockaddr_in addr)
     recv(sockfd, buffer, 255, 0);
 
     printf("Got %s\n", buffer);
-    printf("From %d.%d.%d.%d:%d\n", IPCOMP(addr.sin_addr.s_addr, 0), IPCOMP(addr.sin_addr.s_addr, 1), IPCOMP(addr.sin_addr.s_addr, 2), IPCOMP(addr.sin_addr.s_addr, 3), addr.sin_port);
+    printf("From %d.%d.%d.%d:%d\n\n", IPCOMP(addr.sin_addr.s_addr, 0), IPCOMP(addr.sin_addr.s_addr, 1), IPCOMP(addr.sin_addr.s_addr, 2), IPCOMP(addr.sin_addr.s_addr, 3), addr.sin_port);
 
-    send(sockfd, "Got your response.", 5, 0);
+    send(sockfd, "Got your response\n", 19, 0);
   }
 }
 
 int main(void)
 {
-  int sockfd = start_listening(get_serveraddr(), 2);
+  int sockfd = start_listening(get_serveraddr(), 5);
 
   struct sockaddr_in client_addr;
   socklen_t client_addr_size = sizeof(client_addr);
